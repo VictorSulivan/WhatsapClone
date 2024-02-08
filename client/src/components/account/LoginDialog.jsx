@@ -40,7 +40,7 @@ const dialogStyle={
     maxWidth:'100%',
     maxHeight:'100%',
     boxShadow:'none',
-    overflow:'hidden'
+    overflow:'hidden' 
 }
 const LoginDialog=()=>{
 

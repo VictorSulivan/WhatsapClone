@@ -28,14 +28,14 @@ const BoxWrapper=styled(Box)`
     }
 `;
 const DescriptionContainer=styled(Box)`
-    padding:15x 20px 28px 30px;
-    & >p{
+    padding:15px 20px 28px 30px;
+    & > p{
         font-size:13px;
         color:#8696a0;
     }
 `;
 const Profile=()=>{
-    const {account}=useContext(AccountContext)
+    const {account}=useContext(AccountContext);
     return(
         <>
             <ImageContainer>

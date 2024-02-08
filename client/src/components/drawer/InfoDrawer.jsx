@@ -12,9 +12,9 @@ const drawerStyle={
 const Header=styled(Box)`
     background:#008069;
     height:107px;
-    color:#777777;
-    display:flex;
-    &>svg,&>p{
+    color:#FFFFFF;
+    display:flex; 
+    &  > svg , & > p{
         margin-top:auto;
         padding:15px;
         font-weight:600;

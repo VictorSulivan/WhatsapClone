@@ -1,4 +1,5 @@
-import { useContext,useState  } from "react";
+import React, { useContext, useState } from "react";
+
 import {Chat as MessageIcon } from '@mui/icons-material'
 import { AccountContext } from "../../../constants/AccountProvider";
 import { Box,styled } from "@mui/material";
@@ -34,7 +35,8 @@ const Image=styled('img')
 const Header=()=>{
 
     const {account}=useContext(AccountContext);
-    const [openDrawer,setOpenDrawer]=useState(false);
+    const [openDrawer, setOpenDrawer] = useState(false);
+
     
     const toggleDrawer=()=>{
         setOpenDrawer(true);
@@ -42,10 +44,10 @@ const Header=()=>{
     return(
         <>
             <Component>
-                <Image src={account.picture} alt={'dp'} onClick={()=> toggleDrawer()}/>
+                <Image src={account.picture} alt={'dp'} onClick={()=>toggleDrawer()}/>
                 <Wrapper>
                     <MessageIcon/>
-                    <HeaderMenu/>
+                    <HeaderMenu setOpenDrawer={setOpenDrawer}/>
                 </Wrapper>
             </Component>
             <InfoDrawer open={openDrawer} setOpen={setOpenDrawer}/>

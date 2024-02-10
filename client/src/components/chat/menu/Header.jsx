@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
-
 import {Chat as MessageIcon } from '@mui/icons-material'
 import { AccountContext } from "../../../constants/AccountProvider";
 import { Box,styled } from "@mui/material";
 import HeaderMenu from "./HeaderMenu";
 import InfoDrawer from "../../drawer/InfoDrawer";
+
 const Component=styled(Box)`
     height:44px;
     background:#ededed;

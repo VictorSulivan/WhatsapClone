@@ -71,8 +71,8 @@ const LoginDialog=()=>{
                     <QRCode src={qrCodeImage} alt='qr code'/>
                     <Box style={{ position:'absolute',top:'50%', transform:'translateX(25%)'}}>
                         <GoogleLogin
-                        onSuccess={onLoginSuccess}
-                        onError={onLoginError}
+                            onSuccess={onLoginSuccess}
+                            onError={onLoginError}
                         />
                     </Box>
                 </Box>

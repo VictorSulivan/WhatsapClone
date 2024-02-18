@@ -3,7 +3,7 @@ import Toolbar from '@mui/material/Toolbar';
 import ChatDialog from './chat/ChatDialog';
 import LoginDialog from "./account/LoginDialog";
 import { useContext } from 'react';
-import { AccountContext } from '../constants/AccountProvider';
+import { AccountContext } from '../context/AccountProvider';
 const Components=styled(Box)`
     height:100vh;
     background:#DCDCDC;

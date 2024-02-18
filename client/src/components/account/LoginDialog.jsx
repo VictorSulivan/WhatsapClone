@@ -1,7 +1,7 @@
 import { Dialog,Box,Typography, List, ListItem,styled } from "@mui/material";
 import { useContext } from "react";
 import { qrCodeImage } from "../../constants/data";
-import { AccountContext } from "../../constants/AccountProvider";
+import { AccountContext } from "../../context/AccountProvider";
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 import { addUser } from "../../service/api";

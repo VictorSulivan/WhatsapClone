@@ -1,6 +1,6 @@
 import { Box,Typography,styled } from "@mui/material";
 import { useContext } from "react";
-import { AccountContext } from "../../constants/AccountProvider";
+import { AccountContext } from "../../context/AccountProvider";
 
 const ImageContainer=styled(Box)`
     display:flex;

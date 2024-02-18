@@ -3,7 +3,7 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import Messenger from './components/Messenger';
-import AccountProvider from './constants/AccountProvider';
+import AccountProvider from './context/AccountProvider';
 function App() {
   const clientId='178282863955-dbu2d7gojksfvsvq9l7cvjip7obbrc99.apps.googleusercontent.com';
   return (

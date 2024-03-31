@@ -16,7 +16,7 @@ const StyleDivider=styled(Divider)`
     opacity: 0.6;
 `;
 
-const Conversations=({text })=>{
+const Conversations=({text})=>{
 
     const [users, setUsers] = useState([]);
     const {account}=useContext(AccountContext);

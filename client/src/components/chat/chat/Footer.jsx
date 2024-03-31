@@ -1,7 +1,6 @@
 import { Box,InputBase,styled } from "@mui/material";
 import { EmojiEmotionsOutlined, AttachFile, Mic } from "@mui/icons-material";
-
-
+ 
 const Container =styled(Box)`
     height:55px; 
     background: #ededed;
@@ -32,14 +31,19 @@ const InputField =styled(InputBase)`
 const ClipIcon=styled(AttachFile)`
     transform:rotate(40deg)
 `;
-const Footer=()=>{
+const Footer=({ sendText, setValue, value })=>{
+
     return(
         <Container>
             <EmojiEmotionsOutlined/>
             <ClipIcon/>
             <Search>
                 <InputField  
-                placeholder="type a messagef"/>
+                    placeholder="type a message"
+                    onChange={(e) => setValue(e.target.value)}
+                    onKeyDown={(e) => sendText(e)}
+                    value={value}
+                /> 
             </Search>
             <Mic />
         </Container>

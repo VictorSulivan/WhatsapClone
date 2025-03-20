@@ -37,6 +37,27 @@ const Time = styled(Typography)`
     margin-top:auto;
 `;
 
+const FileContainer = styled(Box)`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+`;
+
+const FileImage = styled('img')`
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 5px;
+`;
+
+const FileLink = styled('a')`
+    color: #128C7E;
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
 const Message = ({ message }) => {
     const { account } = useContext(AccountContext);
     
@@ -50,16 +71,41 @@ const Message = ({ message }) => {
         }
     };
 
+    const renderContent = () => {
+        if (message.type === 'file') {
+            const fileUrl = `http://localhost:8000${message.file.path}`;
+            if (message.file?.contentType?.startsWith('image/')) {
+                return (
+                    <FileContainer>
+                        <FileImage src={fileUrl} alt={message.file.name} />
+                        <FileLink href={fileUrl} target="_blank" rel="noopener noreferrer">
+                            {message.file.name}
+                        </FileLink>
+                    </FileContainer>
+                );
+            } else {
+                return (
+                    <FileContainer>
+                        <FileLink href={fileUrl} target="_blank" rel="noopener noreferrer">
+                            📎 {message.file.name}
+                        </FileLink>
+                    </FileContainer>
+                );
+            }
+        }
+        return <Text>{message.text}</Text>;
+    };
+
     return (
         <>
             {account.sub === message.senderId ? (
                 <Own>
-                    <Text>{message.text}</Text>
+                    {renderContent()}
                     <Time>{getFormattedTime()}</Time>
                 </Own>
             ) : (
                 <Wrapper>
-                    <Text>{message.text}</Text>
+                    {renderContent()}
                     <Time>{getFormattedTime()}</Time>
                 </Wrapper>
             )}

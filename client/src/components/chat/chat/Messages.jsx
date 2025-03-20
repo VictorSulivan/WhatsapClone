@@ -1,6 +1,6 @@
 import { Box, styled } from "@mui/material";
 import Footer from "./Footer";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { AccountContext } from "../../../context/AccountProvider";
 import { getMessages } from "../../../service/api";
 import Message from "./Message";
@@ -24,6 +24,15 @@ const Messages = ({ person, conversation, socket }) => {
     const [messages, setMessages] = useState([]);
     const [file, setFile] = useState();
     const { account } = useContext(AccountContext);
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
 
     useEffect(() => {
         socket?.on('receive_message', (data) => {
@@ -53,13 +62,28 @@ const Messages = ({ person, conversation, socket }) => {
                 senderId: account.sub,
                 receiverId: person.sub,
                 conversationId: conversation._id,
-                type: 'text',
+                type: file ? 'file' : 'text',
                 text: value
             };
             
             try {
-                socket?.emit('new_message', message);
-                setValue('');
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        message.file = {
+                            name: file.name,
+                            data: reader.result,
+                            type: file.type
+                        };
+                        socket?.emit('new_message', message);
+                        setValue('');
+                        setFile(null);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    socket?.emit('new_message', message);
+                    setValue('');
+                }
             } catch (error) {
                 console.error("Erreur lors de l'envoi du message:", error);
             }
@@ -76,6 +100,7 @@ const Messages = ({ person, conversation, socket }) => {
                         </Container>
                     ))
                 }
+                <div ref={messagesEndRef} />
             </Component>
             <Footer sendText={sendText} setValue={setValue} value={value} file={file} setFile={setFile} />
         </Wrapper>

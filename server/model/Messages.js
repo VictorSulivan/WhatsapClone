@@ -15,6 +15,11 @@ const MessageSchema = new mongoose.Schema({
     },
     type: {
         type: String
+    },
+    file: {
+        name: String,
+        path: String,
+        contentType: String
     }
 },
 { 

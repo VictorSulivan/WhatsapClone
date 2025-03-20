@@ -48,9 +48,11 @@ const Footer=({ sendText, setValue, value, file, setFile  })=>{
     },[file])
 
     const onFileChange =(e)=>{
-        setFile(e.target.files[0]);
-        setValue(e.target.files[0].name)
-
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+            setFile(selectedFile);
+            setValue(selectedFile.name);
+        }
     }
     return(
         <Container>

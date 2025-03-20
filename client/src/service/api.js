@@ -1,26 +1,30 @@
- import axios from "axios"; 
+import axios from "axios"; 
 
+const url = process.env.REACT_APP_URL || 'http://localhost:8000';
 
- const url=process.env.url;
-
- export const addUser = async(data)=>{
+export const addUser = async(data)=>{
     try {
-        await axios.post(`${url}/add`, data);
-    } catch (error) {
-        console.log("Error while addUser API"+ error.message);
-    }
- }
-
- export const getUsers = async () => {
-    try {    
-        let response = await axios.get(`${url}/users`);
+        console.log('Sending user data:', data);
+        const response = await axios.post(`${url}/add`, data);
+        console.log('Server response:', response.data);
         return response.data;
     } catch (error) {
-        console.log("Error while calling getUsers API"+ error.message);
+        console.error("Error while addUser API:", error.response?.data || error.message);
+        throw error;
     }
- }
+}
 
- export const setConversation = async (data) => {
+export const getUsers = async () => {
+    try {    
+        const response = await axios.get(`${url}/users`);
+        return response.data || [];
+    } catch (error) {
+        console.log("Error while calling getUsers API: ", error.message);
+        return [];
+    }
+}
+
+export const setConversation = async (data) => {
     try {
         await axios.post(`${url}/conversation/add`, data);
     } catch (error) {

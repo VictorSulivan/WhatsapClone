@@ -49,7 +49,9 @@ const LoginDialog=()=>{
 
     const onLoginSuccess= async (res)=>{
         const decoded = jwtDecode(res.credential);
-        setAccount( decoded);
+        console.log('Google OAuth response:', decoded);
+        console.log('Picture URL:', decoded.picture);
+        setAccount(decoded);
         await addUser(decoded);
     }
      

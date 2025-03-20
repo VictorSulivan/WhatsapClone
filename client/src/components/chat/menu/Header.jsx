@@ -4,6 +4,7 @@ import { AccountContext } from "../../../context/AccountProvider";
 import { Box,styled } from "@mui/material";
 import HeaderMenu from "./HeaderMenu";
 import InfoDrawer from "../../drawer/InfoDrawer";
+import { emptyProfilePicture } from "../../../constants/data";
 
 const Component=styled(Box)`
     height:44px;
@@ -29,7 +30,8 @@ const Image=styled('img')
     ({
         height:40, 
         width:40,
-        borderRadius:'50%'
+        borderRadius:'50%',
+        objectFit: 'cover'
     })
 ;
 const Header=()=>{
@@ -37,6 +39,10 @@ const Header=()=>{
     const {account}=useContext(AccountContext);
     const [openDrawer, setOpenDrawer] = useState(false);
 
+    const handleImageError = (e) => {
+        console.error('Image failed to load:', account.picture);
+        e.target.src = emptyProfilePicture;
+    };
     
     const toggleDrawer=()=>{
         setOpenDrawer(true);
@@ -44,7 +50,12 @@ const Header=()=>{
     return(
         <>
             <Component>
-                <Image src={account.picture} alt={'dp'} onClick={()=>toggleDrawer()}/>
+                <Image 
+                    src={account.picture} 
+                    alt={'dp'} 
+                    onClick={()=>toggleDrawer()}
+                    onError={handleImageError}
+                />
                 <Wrapper>
                     <MessageIcon/>
                     <HeaderMenu setOpenDrawer={setOpenDrawer}/>

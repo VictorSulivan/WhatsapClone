@@ -5,13 +5,18 @@ import conversation from '../model/Conversation.js';
 export const newMessage = async (request, response) => {
     const newMessage = new message(request.body);
     try {
-        await newMessage.save();
-        await conversation.findByIdAndUpdate(request.body.conversationId, { message: request.body.text });
-        response.status(200).json("Message has been sent successfully");
+        const savedMessage = await newMessage.save();
+        const updatedConversation = await conversation.findByIdAndUpdate(
+            request.body.conversationId, 
+            { message: request.body.text },
+            { new: true }
+        );
+        response.status(200).json(savedMessage);
+        return updatedConversation;
     } catch (error) {
         response.status(500).json(error.message);
+        return null;
     }
-
 }
 
 export const getMessages = async (request, response) => {
@@ -20,7 +25,6 @@ export const getMessages = async (request, response) => {
         return response.status(200).json(messages)
     } catch (error) {
         return response.status(500).json(error.message)
-
     }
 }
 

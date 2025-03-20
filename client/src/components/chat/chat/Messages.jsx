@@ -1,8 +1,8 @@
 import { Box, styled } from "@mui/material";
 import Footer from "./Footer";
-import { useContext, useState,useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AccountContext } from "../../../context/AccountProvider";
-import { getMessages, newMessages } from "../../../service/api";
+import { getMessages } from "../../../service/api";
 import Message from "./Message";
 
 const Wrapper = styled(Box)`
@@ -17,57 +17,69 @@ const Component = styled(Box)`
 
 const Container = styled(Box)`
     padding: 1px 80px
-`
-const Messages=({person, conversation})=>{
+`;
 
-    const [value,setValue]=useState('');
-    const [messages,setMessages ]=useState([]);
-    const [newMessagesFlags,setNewMessagesFlags ]=useState(false);
-    const [file,setFile] =useState()
-    const {account}=useContext(AccountContext); 
+const Messages = ({ person, conversation, socket }) => {
+    const [value, setValue] = useState('');
+    const [messages, setMessages] = useState([]);
+    const [file, setFile] = useState();
+    const { account } = useContext(AccountContext);
 
-    useEffect(()=>{
-        const getMessageDetails=async ()=>{
-            let data = await getMessages(conversation._id)
-            setMessages(data )
+    useEffect(() => {
+        socket?.on('receive_message', (data) => {
+            if (data.conversationId === conversation._id) {
+                setMessages(prev => [...prev, data]);
+            }
+        });
+
+        return () => {
+            socket?.off('receive_message');
+        };
+    }, [socket, conversation._id]);
+
+    useEffect(() => {
+        const getMessageDetails = async () => {
+            let data = await getMessages(conversation._id);
+            setMessages(data);
         }
-        conversation._id &&  getMessageDetails();
-    },[person._id, conversation._id, newMessagesFlags])
+        conversation._id && getMessageDetails();
+    }, [person._id, conversation._id]);
 
-
-
-    const sendText=async(e)=>{
+    const sendText = async (e) => {
         const code = e.keyCode || e.which;
 
-        if(code===13){
-            let message={
+        if (code === 13) {
+            let message = {
                 senderId: account.sub,
                 receiverId: person.sub,
                 conversationId: conversation._id,
-                type:'text',
+                type: 'text',
                 text: value
+            };
+            
+            try {
+                socket?.emit('new_message', message);
+                setValue('');
+            } catch (error) {
+                console.error("Erreur lors de l'envoi du message:", error);
             }
-            await newMessages(message);
-            setValue('');
-            setNewMessagesFlags(prev => !prev)
         }
     }
 
-    return(
+    return (
         <Wrapper>
             <Component>
                 {
-                    messages && messages.map(message=>(
-                        <Container> 
-                            <Message message={message}/>
+                    messages && messages.map(message => (
+                        <Container key={message._id}>
+                            <Message message={message} />
                         </Container>
                     ))
                 }
             </Component>
-            <Footer sendText={sendText} setValue={setValue} value={value} file={file} setFile={setFile}/>
-
+            <Footer sendText={sendText} setValue={setValue} value={value} file={file} setFile={setFile} />
         </Wrapper>
-    )
- }
+    );
+}
 
- export default Messages;
+export default Messages;

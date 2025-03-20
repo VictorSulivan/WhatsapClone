@@ -22,10 +22,21 @@ const Conversations=({text})=>{
     const {account}=useContext(AccountContext);
     useEffect(() => {
         const fetchData = async () => {
-            let response = await getUsers(); 
-            const filteredData=response.filter(user=> user.name.toLowerCase().includes(text.toLowerCase())) 
-            setUsers(filteredData);
-        }
+            try {
+                const response = await getUsers();
+                if (Array.isArray(response)) {
+                    const filteredData = response.filter(user => 
+                        user.name.toLowerCase().includes(text.toLowerCase())
+                    );
+                    setUsers(filteredData);
+                } else {
+                    setUsers([]);
+                }
+            } catch (error) {
+                console.error("Error fetching users:", error);
+                setUsers([]);
+            }
+        };
         fetchData();
     }, [text]); 
 
@@ -36,13 +47,13 @@ const Conversations=({text})=>{
             users.map((user) => {
                 if(user.sub !== account.sub){
                     return(
-                        <>
+                        <div key={user.sub}>
                             <Conversation user={user}/>
                             <StyleDivider/>
-                        </>
+                        </div>
                     )
                 }
-                
+                return null;
             })
         }
        </Component>

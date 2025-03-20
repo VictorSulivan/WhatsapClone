@@ -1,70 +1,90 @@
-import { Box,InputBase,styled } from "@mui/material";
+import { Box, InputBase, styled } from "@mui/material";
 import { EmojiEmotionsOutlined, AttachFile, Mic } from "@mui/icons-material";
-import { useEffect } from "react";
-import { uploadFile } from "../../../service/api";
-const Container =styled(Box)`
-    height:55px; 
+import { useState } from "react";
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
+
+const Container = styled(Box)`
+    height: 55px; 
     background: #ededed;
-    display:flex;
-    width:100%;
-    align-items:center; 
+    display: flex;
+    width: 100%;
+    align-items: center; 
     padding: 0 15px;
-    &>*{
-        margin:5px;
-        color:#919191;
+    & > * {
+        margin: 5px;
+        color: #919191;
     }
 `;
 
-const Search =styled(Box)`
-    background-color:#FFFFFF;
-    border-radius:18px;
+const Search = styled(Box)`
+    background-color: #FFFFFF;
+    border-radius: 18px;
     width: calc(94% - 100px);
 `;
 
-const InputField =styled(InputBase)`
-    width:100%;
-    padding:20px;
-    height:20px;
-    padding:-left:25px;
-    font-size:14px;
+const InputField = styled(InputBase)`
+    width: 100%;
+    padding: 20px;
+    height: 20px;
+    padding-left: 25px;
+    font-size: 14px;
 `;
 
-const ClipIcon=styled(AttachFile)`
-    transform:rotate(40deg)
+const ClipIcon = styled(AttachFile)`
+    transform: rotate(40deg)
 `;
-const Footer=({ sendText, setValue, value, file, setFile  })=>{
 
-    useEffect(()=>{
-        const getImage = async () => {
-            if (file){
-                const data=new FormData();
-                data.append('name',file.name)
-                data.append('file',file)
+const EmojiPickerContainer = styled(Box)`
+    position: absolute;
+    bottom: 70px;
+    left: 20px;
+    z-index: 1000;
+`;
 
-                 await uploadFile(data)
-            }
-        }
-        getImage();
-    },[file])
+const Footer = ({ sendText, setValue, value, file, setFile }) => {
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-    const onFileChange =(e)=>{
+    const onEmojiSelect = (emoji) => {
+        setValue(prevValue => prevValue + emoji.native);
+        setShowEmojiPicker(false);
+    };
+
+    const onFileChange = (e) => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
             setFile(selectedFile);
             setValue(selectedFile.name);
         }
     }
-    return(
+
+    return (
         <Container>
-            <EmojiEmotionsOutlined/>
+            <EmojiEmotionsOutlined 
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                style={{ cursor: 'pointer' }}
+            />
+            {showEmojiPicker && (
+                <EmojiPickerContainer>
+                    <Picker 
+                        data={data} 
+                        onEmojiSelect={onEmojiSelect}
+                        theme="light"
+                        previewPosition="none"
+                        skinTonePosition="none"
+                        searchPosition="none"
+                        navPosition="none"
+                    />
+                </EmojiPickerContainer>
+            )}
             <label htmlFor="fileInput">
-                <ClipIcon/>
+                <ClipIcon />
             </label>
             <input 
                 type="file" 
                 id="fileInput"
-                style={{display:"none"}}
-                onChange={(e)=>onFileChange(e)}
+                style={{ display: "none" }}
+                onChange={(e) => onFileChange(e)}
             />
             <Search>
                 <InputField  
@@ -76,7 +96,7 @@ const Footer=({ sendText, setValue, value, file, setFile  })=>{
             </Search>
             <Mic />
         </Container>
-    )
- }
+    );
+}
 
- export default Footer;
+export default Footer;
